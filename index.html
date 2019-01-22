@@ -39,6 +39,25 @@
       });
       request.send();
     }
+    //********************************
+    // /account/get
+    //********************************
+    function getAccount() {
+      address = document.getElementById("address").value;
+      const request = new XMLHttpRequest();
+      request.open("GET", `http://go.nem.ninja:7890/account/get?address=${address}`);
+      request.addEventListener("load", (event) => {
+        const res = JSON.parse(event.target.responseText);
+
+        target = document.getElementById("account");
+        target.innerHTML = `
+                           <p>アカウント：${res.account.address}</p>
+                           <p>残高：${parseFloat(res.account.balance) / 1000000}xem</p>
+                           <p>重要度：${res.account.importance}</p>
+                           `;
+      });
+      request.send();
+    }
 
   </script>
 </body>
