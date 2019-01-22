@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>NEM Wallet</title>
+</head>
+<body>
+  <h1>NEM Wallet</h1>
+
+  <label>アドレス：</label>
+  <input id="address" type="text" name="address" size="100" value="">
+  <br><br>
+
+  <button onclick="heartbeat();">ノード確認</button>
+  <div id="node"></div>
+
+  <button onclick="getAccount();">アカウント情報取得</button>
+  <div id="account"></div>
+
+  <button onclick="transfersAllAccount();">トランザクション情報取得</button>
+  <div id="transaction"></div>
+
+  <script>
+    //********************************
+    // /heartbeat
+    //********************************
+    function heartbeat() {
+      const request = new XMLHttpRequest();
+      request.open("GET", 'http://go.nem.ninja:7890/heartbeat');
+      request.addEventListener("load", (event) => {
+        const res = JSON.parse(event.target.responseText);
+                
+        target = document.getElementById("node");
+        target.innerHTML = `
+                           <p>ステータス：${res.message}</p>
+                           `;
+      });
+      request.send();
+    }
+
+  </script>
+</body>
+</html>
