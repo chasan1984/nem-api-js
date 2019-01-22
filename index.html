@@ -58,6 +58,59 @@
       });
       request.send();
     }
+    //********************************
+    // /account/tranfers/all
+    //********************************
+    function transfersAllAccount() {
+      address = document.getElementById("address").value;
+      const request = new XMLHttpRequest();
+      request.open("GET", `http://go.nem.ninja:7890/account/transfers/all?address=${address}`);
+      request.addEventListener("load", (event) => {
+        const res = JSON.parse(event.target.responseText);
+
+        let tbody = "";
+        for(let r of res.data) {
+          tbody += `
+                   <tr>
+                     <td>${timestampToDateTime(r.transaction.timeStamp)}</td>
+                     <td>${r.transaction.recipient == address ? "入金" : "出金"}</td>
+                     <td>${parseFloat(r.transaction.amount) / 1000000}xem</td>
+                     <td>${parseFloat(r.transaction.fee) / 1000000}xem</td>
+                   </tr>
+                   `;
+        }
+        target = document.getElementById("transaction");
+        target.innerHTML = `
+                           <table border="1">
+                             <thead>
+                               <th>時刻</th>
+                               <th>入出金</th>
+                               <th>数量</th>
+                               <th>手数料</th>
+                             </thead>
+                             <tbody>
+                               ${tbody}
+                             </tbody>
+                           </table>
+                           `;
+      });
+      request.send();
+    }
+
+    function timestampToDateTime(nemtime) {
+      // nem のブロックチェーンの開始時間をベース時間にしたタイムスタンプ
+      intTime = Date.UTC(2015, 2, 29, 0, 6, 25, 0) + (nemtime * 1000);
+
+      let d = new Date(intTime);
+      let year  = d.getFullYear();
+      let month = ('0' + (d.getMonth() + 1)).slice(-2);
+      let day   = ('0' + d.getDate()).slice(-2);
+      let hour  = ('0' + d.getHours()).slice(-2);
+      let min   = ('0' + d.getMinutes()).slice(-2);
+      let sec   = ('0' + d.getSeconds()).slice(-2);
+
+      return( year + '-' + month + '-' + day + ' ' + hour + ':' + min + ':' + sec );
+    }
 
   </script>
 </body>
